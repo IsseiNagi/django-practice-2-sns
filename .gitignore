@@ -4,4 +4,5 @@ Pipfile.lock
 */__init__.py
 */*/__init__.py
 db.sqlite3
+media
 .DS_Store
