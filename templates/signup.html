@@ -1,5 +1,14 @@
 {%  extends 'base.html' %}
 
+<!-- STATICFILES_DIRSの場所をDjangoに伝えるためのタグを書く -->
+{% load static %}
+
+<!-- customcssを読み込むための指定 -->
+{% block customcss %}
+<link href="{% static 'style.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
+
 {% block content %}
 <body class="text-center">
     {{ error }}  <!-- viewでコンテキストにerrorを指定している場合のみ、内容が表示される -->

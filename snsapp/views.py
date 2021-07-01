@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User  # Userモデルをimport
 from django.contrib.auth import authenticate, login  # ログインのために
 from django.db import IntegrityError  # IntegrityErrorの表示のために
 from .models import SnsModel
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -21,7 +22,7 @@ def signupfunc(request):
                 )
 
     # GETの場合の挙動
-    return render(request, 'signup', {'': ''})
+    return render(request, 'signup.html', {'': ''})
 
 
 def loginfunc(request):
@@ -34,17 +35,16 @@ def loginfunc(request):
         if user is not None:
             # ログインさせる
             login(request, user)
-            return render(
-                request, 'login.html', {'context': 'ログインしました'}
-                )
+            return redirect('list')
         else:
             return render(
-                request, 'login.html', {'context': 'ログインしました'}
+                request, 'login.html', {'context': '正しい情報でログインしてください'}
                 )
     # GETの場合の挙動
     return render(request, 'login.html', {'context': 'get method'})
 
 
+# @login_required
 def listfunc(request):
     object_list = SnsModel.objects.all()
     return render(request, 'list.html', {'object_list': object_list})
