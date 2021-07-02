@@ -58,7 +58,7 @@ def logoutfunc(request):
 def detailfunc(request, pk):  # URLに付け加えられる数字の情報を引数で受ける
     # 対象のオブジェクトがあればオブジェクトを返すし、なければ404エラーを返してくれるdjangoのメソッド
     # get_object_or_404(klass, *args, **kwargs)  klass:modelクラス pkを指定
-    user_object = get_object_or_404(SnsModel, pk=pk)
+    detail_object = get_object_or_404(SnsModel, pk=pk)
     # Calls get() on a given model manager, but it raises Http404 instead of the model's DoesNotExist exception.
     # klass
     # A Model class, a Manager, or a QuerySet instance from which to get the object.
@@ -66,4 +66,30 @@ def detailfunc(request, pk):  # URLに付け加えられる数字の情報を引
     # Lookup parameters, which should be in the format accepted by get() and filter().
 
     # user_object = SnsModel.object.get('')  # この書き方でも良い
-    return render(request, 'detail.html', {'user_object': user_object})
+    return render(request, 'detail.html', {'detail_object': detail_object})
+
+
+def goodfunc(request, pk):
+    # プライマリーキーでモデルからオブジェクトを取得する
+    detail_object = SnsModel.objects.get(pk=pk)
+    # オブジェクトのgood属性（フィールド）にプラス１する
+    detail_object.good += 1
+    # オブジェクトのデータを保存する
+    detail_object.save()
+    return redirect('list')
+
+
+# 本番環境ではなく開発環境で動かすための実装
+# 既読ボタンをおす->ユーザーが既読をした人であれば、何もしない、既読をしていない人であれば既読フィールドにプラスして、既読ユーザーリストに名前を加える
+def readfunc(request, pk):
+    detail_object = SnsModel.objects.get(pk=pk)
+    # requestオブジェクトからログインしているユーザー名を取得する
+    username = request.user.get_username()
+    if username in detail_object.read_text:  # SnsModelのread_textフィールドに名前があったら
+        return redirect('list')
+    else:
+        detail_object.read += 1
+        # 既読を管理しているread_textに名前を追加　本番には非現実的だが。
+        detail_object.read_text = detail_object.read_text + ' ' + username
+        detail_object.save()
+        return redirect('list')

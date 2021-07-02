@@ -13,9 +13,9 @@
         <p>タイトル：{{ user_object.title }}</p>
         <p>投稿者：{{ user_object.author }}</p>
         <!-- renderで返されるオブジェクト名.イメージの格納しているフィールド名.url、でイメージのurlを取得できる -->
-        <p><img src="{{ user_object.sns_image.url }}" alt=""></p>
-        <a href="#" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">いいねする</a>
-        <a href="#" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">既読</a>
+        <p><img src="{{ detail_object.sns_image.url }}" alt=""></p>
+        <a href="{% url 'good' detail_object.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">いいねする</a>
+        <a href="{% url 'read' detail_object.pk %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">既読</a>
     </div>
     <a href="{% url 'logout' %}" >ログアウト</a>
 
