@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- ログインしているユーザーかどうか -->
+{% if user.is_authenticated %}
+<!-- POSTで送る時のフォームとして、ファイルを送る場合は、enctypeを指定しなくてはいけない。
+今回はテキストとファイルを扱うので、"multipart/form-data"にする。 -->
+<form method="POST" enctype="multipart/form-data">{% csrf_token %}
+<!-- authorを表示させられないのでform.as_pは使用できない -->
+<!-- {{ form.as_p }} -->
+<p>タイトル：<input type="text" name="title"></p>
+<p>内容：<input type="text" name="content"></p>
+<!-- 画像をアップロードするフォーム。type="file" -->
+<p><input type="file" name="sns_image"></p>
+<!-- authorは入力させない。データは取り扱うが表示させないのがhiddenの指定。valueで送るデータを指定。userオブジェクトのusernameを使う -->
+<!-- パスワードなど漏れてはいけない情報をこのようにして扱ってはいけない -->
+<p><input type="hidden" name="author" value="{{ user.username }}"></p>
+<input type="submit" value="create">
+</form>
+{% else %}
+ログインしてください
+{% endif %}
+{% endblock content %}

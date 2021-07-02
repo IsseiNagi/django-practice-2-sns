@@ -3,7 +3,9 @@ from django.contrib.auth.models import User  # Userモデルをimport
 from django.contrib.auth import authenticate, login, logout  # ログインのために
 from django.db import IntegrityError  # IntegrityErrorの表示のために
 from .models import SnsModel
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
 # Create your views here.
 
 
@@ -47,6 +49,7 @@ def loginfunc(request):
 # @login_required
 def listfunc(request):
     object_list = SnsModel.objects.all()
+    object_list = reversed(object_list)
     return render(request, 'list.html', {'object_list': object_list})
 
 
@@ -93,3 +96,10 @@ def readfunc(request, pk):
         detail_object.read_text = detail_object.read_text + ' ' + username
         detail_object.save()
         return redirect('list')
+
+
+class SnsCreate(CreateView):
+    template_name = 'create.html'
+    model = SnsModel
+    fields = ('title', 'content', 'author', 'sns_image')
+    success_url = reverse_lazy('list')
